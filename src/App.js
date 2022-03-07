@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useState,useEffect} from "react";
+import axios from "axios";
+import dice from "./images/icon-dice.svg"
 
 function App() {
+  const [data,setData] = useState([])
+
+  const getQuote = async () => {
+    try{
+      const response = await axios.get('https://api.adviceslip.com/advice')
+      const data = response;
+      setData(data.data.slip)
+    }catch(error){
+      console.log(error)
+    }
+  }
+
+  useEffect(()=>{
+    getQuote()
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <h5>advice #{data.id}</h5>
+      <p>"{data.advice}"</p>
+      <div className="divider"></div>
+      <div onClick={getQuote} className="dice">
+        <img src={dice} alt="dice"></img>
+      </div>
     </div>
   );
 }
